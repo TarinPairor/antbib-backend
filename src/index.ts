@@ -3,6 +3,9 @@ import express, { Express } from "express";
 import { Request, Response } from "express-serve-static-core";
 import dotenv from "dotenv";
 import apiRouter from "./routes/api";
+import tasksRouter from "./routes/tasks";
+import usersRouter from "./routes/users";
+import notificationsRouter from "./routes/notifications";
 import { createClient } from "@supabase/supabase-js";
 
 dotenv.config();
@@ -17,14 +20,17 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 app.use(express.json());
 
 app.use("/api", apiRouter);
+app.use("/tasks", tasksRouter);
+app.use("/users", usersRouter);
+app.use("/notifications", notificationsRouter);
 
-app.get("/", (req: Request, res: Response) => {
+app.get("/", (_: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
 
 app.get(
   "/supabase_healthcheck",
-  async (req: Request, res: Response): Promise<void> => {
+  async (_: Request, res: Response): Promise<void> => {
     const { data, error } = await supabase.from("test").select();
     if (error) {
       res.status(500).json({ error: error.message });
