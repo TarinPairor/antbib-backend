@@ -12,41 +12,39 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// src/index.ts
-const express_1 = __importDefault(require("express"));
-const dotenv_1 = __importDefault(require("dotenv"));
-const api_1 = __importDefault(require("./routes/api"));
-const tasks_1 = __importDefault(require("./routes/tasks"));
-const users_1 = __importDefault(require("./routes/users"));
-const tags_1 = __importDefault(require("./routes/tags"));
-// import notificationsRouter from "./routes/notifications";
+const express_1 = require("express");
 const supabase_js_1 = require("@supabase/supabase-js");
-const cors_1 = __importDefault(require("cors"));
+const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const app = (0, express_1.default)();
-const port = process.env.PORT || 3000;
+const router = (0, express_1.Router)();
 const supabaseUrl = process.env.SUPABASE_URL || "";
 const supabaseKey = process.env.SUPABASE_KEY || "";
 const supabase = (0, supabase_js_1.createClient)(supabaseUrl, supabaseKey);
-app.use((0, cors_1.default)());
-app.use(express_1.default.json());
-app.use("/api", api_1.default);
-app.use("/tasks", tasks_1.default);
-app.use("/users", users_1.default);
-app.use("/tags", tags_1.default);
-// app.use("/notifications", notificationsRouter);
-app.get("/", (_, res) => {
-    res.send("Express + TypeScript Server");
-});
-app.get("/supabase_healthcheck", (_, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { data, error } = yield supabase.from("test").select();
+//get all tag under tasks assigned to a specific user
+router.get("/user/:user_id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { user_id } = req.params;
+    const { data, error } = yield supabase
+        .from("antbib_tasks")
+        .select("tags")
+        .eq("assigned_to", user_id);
     if (error) {
         res.status(500).json({ error: error.message });
         return;
     }
-    res.status(200).json(data);
+    // data is an array of objects with the following structure:
+    // [
+    //   {
+    //     "tags": "urgent,meeting"
+    //   },
+    //   {
+    //     "tags": "america,travel"
+    //   }
+    // ]
+    // so instead you should join the tags into a single string with unique values
+    // like this:
+    const tags = data.map((task) => task.tags).join(",");
+    const uniqueTags = [...new Set(tags.split(","))];
+    res.status(200).json(uniqueTags);
+    // res.status(200).json(tags);
 }));
-app.listen(port, () => {
-    console.log(`[server]: Server is running at http://localhost:${port}`);
-});
-exports.default = app;
+exports.default = router;

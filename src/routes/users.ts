@@ -1,5 +1,8 @@
 import { Router, Request, Response } from "express";
 import { createClient } from "@supabase/supabase-js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const router = Router();
 const supabaseUrl = process.env.SUPABASE_URL || "";
@@ -17,7 +20,10 @@ router.get(
       .eq("user_email", email)
       .single();
 
-    if (error) res.status(500).json({ error: error.message });
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
     res.status(200).json(data);
   }
 );
@@ -33,7 +39,10 @@ router.get(
       .eq("user_id", user_id)
       .single();
 
-    if (error) res.status(500).json({ error: error.message });
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
     res.status(200).json(data);
   }
 );
@@ -49,7 +58,10 @@ router.get(
       .eq("user_email", email)
       .single();
 
-    if (error) res.status(500).json({ error: error.message });
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
     res.status(200).json(data);
   }
 );
@@ -61,7 +73,10 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
     .from("antbib_users")
     .insert([{ username, user_email }]);
 
-  if (error) res.status(500).json({ error: error.message });
+  if (error) {
+    res.status(500).json({ error: error.message });
+    return;
+  }
   res.status(201).json(data);
 });
 
@@ -76,9 +91,23 @@ router.put(
       .update({ username })
       .eq("user_id", user_id);
 
-    if (error) res.status(500).json({ error: error.message });
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
     res.status(200).json(data);
   }
 );
+
+// Get all users
+router.get("/", async (req: Request, res: Response): Promise<void> => {
+  const { data, error } = await supabase.from("antbib_users").select("*");
+
+  if (error) {
+    res.status(500).json({ error: error.message });
+    return;
+  }
+  res.status(200).json(data);
+});
 
 export default router;

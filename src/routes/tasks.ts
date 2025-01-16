@@ -1,5 +1,8 @@
 import { Router, Request, Response } from "express";
 import { createClient } from "@supabase/supabase-js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const router = Router();
 const supabaseUrl = process.env.SUPABASE_URL || "";
@@ -16,7 +19,11 @@ router.get(
       .select("*")
       .eq("assigned_to", user_id);
 
-    if (error) res.status(500).json({ error: error.message });
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
+
     res.status(200).json(data);
   }
 );
@@ -33,7 +40,10 @@ router.get(
       .eq("assigned_to", user_id)
       .gt("start_date", today);
 
-    if (error) res.status(500).json({ error: error.message });
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
     res.status(200).json(data);
   }
 );
@@ -52,7 +62,10 @@ router.get(
       .eq("assigned_to", user_id)
       .ilike("tags", `%${tag}%`);
 
-    if (error) res.status(500).json({ error: error.message });
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
     res.status(200).json(data);
   }
 );
@@ -71,7 +84,10 @@ router.get(
       .eq("assigned_to", user_id)
       .eq("status", status);
 
-    if (error) res.status(500).json({ error: error.message });
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
     res.status(200).json(data);
   }
 );
@@ -80,7 +96,10 @@ router.get(
 router.get("/", async (req: Request, res: Response): Promise<void> => {
   const { data, error } = await supabase.from("antbib_tasks").select("*");
 
-  if (error) res.status(500).json({ error: error.message });
+  if (error) {
+    res.status(500).json({ error: error.message });
+    return;
+  }
   res.status(200).json(data);
 });
 
@@ -94,7 +113,10 @@ router.get(
       .select("*")
       .eq("status", status);
 
-    if (error) res.status(500).json({ error: error.message });
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
     res.status(200).json(data);
   }
 );
@@ -109,7 +131,10 @@ router.get(
       .select("*")
       .eq("task_id", task_id);
 
-    if (error) res.status(500).json({ error: error.message });
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
     res.status(200).json(data);
   }
 );
@@ -124,7 +149,10 @@ router.get(
       .select("assigned_to")
       .eq("task_id", task_id);
 
-    if (error) res.status(500).json({ error: error.message });
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
     res.status(200).json(data);
   }
 );
@@ -156,7 +184,10 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
     },
   ]);
 
-  if (error) res.status(500).json({ error: error.message });
+  if (error) {
+    res.status(500).json({ error: error.message });
+    return;
+  }
   res.status(201).json(data);
 });
 
@@ -171,7 +202,10 @@ router.put(
       .update({ assigned_to })
       .eq("task_id", task_id);
 
-    if (error) res.status(500).json({ error: error.message });
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
     res.status(200).json(data);
   }
 );
@@ -205,7 +239,10 @@ router.put(
       })
       .eq("task_id", task_id);
 
-    if (error) res.status(500).json({ error: error.message });
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
     res.status(200).json(data);
   }
 );
