@@ -21,19 +21,22 @@ const supabaseUrl = process.env.SUPABASE_URL || "";
 const supabaseKey = process.env.SUPABASE_KEY || "";
 const supabase = (0, supabase_js_1.createClient)(supabaseUrl, supabaseKey);
 // Get user_id from email
-router.get("/email/:email", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email } = req.params;
-    const { data, error } = yield supabase
-        .from("antbib_users")
-        .select("user_id")
-        .eq("user_email", email)
-        .single();
-    if (error) {
-        res.status(500).json({ error: error.message });
-        return;
-    }
-    res.status(200).json(data);
-}));
+// router.get(
+//   "/email/:email",
+//   async (req: Request<{ email: string }>, res: Response): Promise<void> => {
+//     const { email } = req.params;
+//     const { data, error } = await supabase
+//       .from("antbib_users")
+//       .select("user_id")
+//       .eq("user_email", email)
+//       .single();
+//     if (error) {
+//       res.status(500).json({ error: error.message });
+//       return;
+//     }
+//     res.status(200).json(data);
+//   }
+// );
 // Get user from user_id
 router.get("/:user_id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { user_id } = req.params;
