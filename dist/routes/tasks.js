@@ -183,4 +183,17 @@ router.put("/:task_id", (req, res) => __awaiter(void 0, void 0, void 0, function
     }
     res.status(200).json(data);
 }));
+// Delete task
+router.delete("/:task_id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { task_id } = req.params;
+    const { data, error } = yield supabase
+        .from("antbib_tasks")
+        .delete()
+        .eq("task_id", task_id);
+    if (error) {
+        res.status(500).json({ error: error.message });
+        return;
+    }
+    res.status(200).json(data);
+}));
 exports.default = router;

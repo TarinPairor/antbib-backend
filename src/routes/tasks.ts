@@ -247,4 +247,22 @@ router.put(
   }
 );
 
+// Delete task
+router.delete(
+  "/:task_id",
+  async (req: Request<{ task_id: string }>, res: Response): Promise<void> => {
+    const { task_id } = req.params;
+    const { data, error } = await supabase
+      .from("antbib_tasks")
+      .delete()
+      .eq("task_id", task_id);
+
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
+    res.status(200).json(data);
+  }
+);
+
 export default router;
