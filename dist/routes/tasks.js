@@ -33,6 +33,19 @@ router.get("/user/:user_id", (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
     res.status(200).json(data);
 }));
+//Get tasks for user by user_email
+router.get("/user/email/:user_email", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { user_email } = req.params;
+    const { data, error } = yield supabase
+        .from("antbib_tasks")
+        .select("*")
+        .eq("assigned_to", user_email);
+    if (error) {
+        res.status(500).json({ error: error.message });
+        return;
+    }
+    res.status(200).json(data);
+}));
 // Get tasks for a user by user_id that are upcoming
 router.get("/user/:user_id/upcoming", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { user_id } = req.params;

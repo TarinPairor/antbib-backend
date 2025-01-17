@@ -28,6 +28,28 @@ router.get(
   }
 );
 
+//Get tasks for user by user_email
+router.get(
+  "/user/email/:user_email",
+  async (
+    req: Request<{ user_email: string }>,
+    res: Response
+  ): Promise<void> => {
+    const { user_email } = req.params;
+    const { data, error } = await supabase
+      .from("antbib_tasks")
+      .select("*")
+      .eq("assigned_to", user_email);
+
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
+
+    res.status(200).json(data);
+  }
+);
+
 // Get tasks for a user by user_id that are upcoming
 router.get(
   "/user/:user_id/upcoming",
