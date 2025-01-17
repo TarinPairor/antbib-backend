@@ -19,7 +19,7 @@ const api_1 = __importDefault(require("./routes/api"));
 const tasks_1 = __importDefault(require("./routes/tasks"));
 const users_1 = __importDefault(require("./routes/users"));
 const tags_1 = __importDefault(require("./routes/tags"));
-// import notificationsRouter from "./routes/notifications";
+const notifications_1 = __importDefault(require("./routes/notifications"));
 const supabase_js_1 = require("@supabase/supabase-js");
 const cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
@@ -34,7 +34,7 @@ app.use("/api", api_1.default);
 app.use("/tasks", tasks_1.default);
 app.use("/users", users_1.default);
 app.use("/tags", tags_1.default);
-// app.use("/notifications", notificationsRouter);
+app.use("/notifications", notifications_1.default);
 app.get("/", (_, res) => {
     res.send("Express + TypeScript Server");
 });

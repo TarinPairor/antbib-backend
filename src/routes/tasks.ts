@@ -307,4 +307,21 @@ router.delete(
   }
 );
 
+// Create subtask
+router.post(
+  "/subtasks",
+  async (req: Request<{ task_id: string }>, res: Response): Promise<void> => {
+    const { task_id, title, description, status } = req.body;
+    const { data, error } = await supabase
+      .from("antbib_subtasks")
+      .insert([{ task_id, title, description, status }]);
+
+    if (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
+    res.status(201).json(data);
+  }
+);
+
 export default router;

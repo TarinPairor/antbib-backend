@@ -223,4 +223,16 @@ router.delete("/:task_id", (req, res) => __awaiter(void 0, void 0, void 0, funct
     }
     res.status(200).json(data);
 }));
+// Create subtask
+router.post("/subtasks", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { task_id, title, description, status } = req.body;
+    const { data, error } = yield supabase
+        .from("antbib_subtasks")
+        .insert([{ task_id, title, description, status }]);
+    if (error) {
+        res.status(500).json({ error: error.message });
+        return;
+    }
+    res.status(201).json(data);
+}));
 exports.default = router;

@@ -6,7 +6,7 @@ import apiRouter from "./routes/api";
 import tasksRouter from "./routes/tasks";
 import usersRouter from "./routes/users";
 import tagsRouter from "./routes/tags";
-// import notificationsRouter from "./routes/notifications";
+import notificationsRouter from "./routes/notifications";
 import { createClient } from "@supabase/supabase-js";
 import cors from "cors";
 
@@ -26,7 +26,7 @@ app.use("/api", apiRouter);
 app.use("/tasks", tasksRouter);
 app.use("/users", usersRouter);
 app.use("/tags", tagsRouter);
-// app.use("/notifications", notificationsRouter);
+app.use("/notifications", notificationsRouter);
 
 app.get("/", (_: Request, res: Response) => {
   res.send("Express + TypeScript Server");
