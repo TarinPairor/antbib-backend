@@ -36,10 +36,30 @@ router.get(
     res: Response
   ): Promise<void> => {
     const { user_email } = req.params;
+
+    // get user_id from user_email
+    const { data: userData, error: userError } = await supabase
+      .from("antbib_users")
+      .select("user_id")
+      .eq("user_email", user_email);
+
+    if (userError) {
+      res.status(500).json({ error: userError.message });
+      return;
+    }
+
+    const user_id =
+      userData && userData.length > 0 ? userData[0].user_id : null;
+
+    if (!user_id) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+
     const { data, error } = await supabase
       .from("antbib_tasks")
       .select("*")
-      .eq("assigned_to", user_email);
+      .eq("assigned_to", user_id);
 
     if (error) {
       res.status(500).json({ error: error.message });
